@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+from statsmodels.stats.diagnostic import acorr_ljungbox
+
+# Generar 100 números aleatorios
+n = 100
+random_numbers = np.random.rand(n)
+
+# Prueba de Uniformidad (Kolmogorov-Smirnov Test)
+uniformity_test = stats.kstest(random_numbers, 'uniform')
+
+# Prueba de Aleatoriedad (Prueba de Ljung-Box para detectar autocorrelación)
+randomness_test = acorr_ljungbox(random_numbers, lags=[10], return_df=True)
+
+# Prueba de Independencia (Prueba de Chi-Cuadrado)
+hist, bin_edges = np.histogram(random_numbers, bins=10)
+expected = np.ones_like(hist) * np.mean(hist)
+chi2, p_val = stats.chisquare(hist, expected)
+
+# Resultados
+print("Prueba de Uniformidad (Kolmogorov-Smirnov Test):")
+print(uniformity_test)
+print("\nPrueba de Aleatoriedad (Ljung-Box Test):")
+print(randomness_test)
+print("\nPrueba de Independencia (Chi-Cuadrado):")
+print(f"Chi2: {chi2}, P-valor: {p_val}")
+
+# Graficar los números aleatorios para visualización
+plt.figure(figsize=(10, 6))
+plt.plot(random_numbers, marker='o', linestyle='-', color='b')
+plt.title("Números aleatorios generados")
+plt.xlabel("Índice")
+plt.ylabel("Valor aleatorio")
+plt.show()
